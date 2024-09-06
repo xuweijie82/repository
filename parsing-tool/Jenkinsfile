@@ -1,0 +1,6 @@
+@Library('jenkins.shared.library') _
+
+javaContainer(
+    sonarProjectKey: "lendlease_corp_com.lib.util.engine.tool",
+    artifactName: "com-lib-util-engine-tool"
+)

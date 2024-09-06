@@ -1,0 +1,138 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id "com.jfrog.artifactory" version "4.17.2"
+	id 'maven-publish'
+	id 'com.google.cloud.tools.jib' version '2.8.0'
+	id 'org.sonarqube' version '3.1'
+	id 'jacoco'
+	id 'com.github.johnrengelman.shadow' version '7.1.2'		
+
+}
+
+group = 'com.lib.util.engine.tool'
+version = project.findProperty('buildVersion') ?:'2024-02.0.0'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    maven { 
+        url 'https://lldigital.jfrog.io/artifactory/gradle'
+        credentials {
+            username 'dhananjay.singh'
+            password 'eyJ2ZXIiOiIyIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJxQUhVa1JLaFZodGhkQzFKQmZIQjhMYTBuUFd1T3EtTDNlekFtaXQwc0pBIn0.eyJzdWIiOiJqZmZlQDAwMFwvdXNlcnNcL2RoYW5hbmpheS5zaW5naCIsInNjcCI6ImFwcGxpZWQtcGVybWlzc2lvbnNcL2FkbWluIGFwaToqIiwiYXVkIjpbImpmcnRAKiIsImpmbWRAKiIsImpmZXZ0QCoiXSwiaXNzIjoiamZmZUAwMDAiLCJpYXQiOjE2MTA1MjQxNTMsImp0aSI6IjYwZTkxZGFkLTUwNzEtNDdiNy1iMGZkLTY2ZmM0MDEyMmRiMCJ9.rF40XlG8XXES32FpvKI21e5l-zWu67VORT1a-8wiDBKIhdC-KqL2kvGSooMKqppU-t4o050K_UljT-X_6z5vVWZWbpOiB00xp5X7zI0mWMCwwtuQN75YbJ0Qe_scdizQ3WbgUT70hol5bC8Lb1BAb0-hAOWEBzT9f9GDOmPirwjC3rGEi7Azgj9_r9xXwwhD3ReEfnM3W9EAZgO0HNPFVjzWFUOYBD0HYLoIY7Fifk0ll5SHpzKRr255qoaUcrJFUSlYwkfFr7ZlC3IQ6Uk2TEO0b0DRTIIcraJlp_HxRQ3B_ot-WJGkrgvuuOvtvEwytF1fUsftGpBwyHon3KN3yw'
+        }
+    }    
+}
+
+bootJar {
+    enabled=false
+}
+
+jar {
+    enabled=true
+}
+
+jib {
+    from.image = 'openjdk:17-alpine'  // Specify a Java 17-compatible base image
+}
+
+artifactory {
+    contextUrl = "https://lldigital.jfrog.io/artifactory"
+    publish {
+        repository {
+            repoKey = 'gradle-local'
+            username = "dhananjay.singh"
+            password = "eyJ2ZXIiOiIyIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJxQUhVa1JLaFZodGhkQzFKQmZIQjhMYTBuUFd1T3EtTDNlekFtaXQwc0pBIn0.eyJzdWIiOiJqZmZlQDAwMFwvdXNlcnNcL2RoYW5hbmpheS5zaW5naCIsInNjcCI6ImFwcGxpZWQtcGVybWlzc2lvbnNcL2FkbWluIGFwaToqIiwiYXVkIjpbImpmcnRAKiIsImpmbWRAKiIsImpmZXZ0QCoiXSwiaXNzIjoiamZmZUAwMDAiLCJpYXQiOjE2MTA1MjQxNTMsImp0aSI6IjYwZTkxZGFkLTUwNzEtNDdiNy1iMGZkLTY2ZmM0MDEyMmRiMCJ9.rF40XlG8XXES32FpvKI21e5l-zWu67VORT1a-8wiDBKIhdC-KqL2kvGSooMKqppU-t4o050K_UljT-X_6z5vVWZWbpOiB00xp5X7zI0mWMCwwtuQN75YbJ0Qe_scdizQ3WbgUT70hol5bC8Lb1BAb0-hAOWEBzT9f9GDOmPirwjC3rGEi7Azgj9_r9xXwwhD3ReEfnM3W9EAZgO0HNPFVjzWFUOYBD0HYLoIY7Fifk0ll5SHpzKRr255qoaUcrJFUSlYwkfFr7ZlC3IQ6Uk2TEO0b0DRTIIcraJlp_HxRQ3B_ot-WJGkrgvuuOvtvEwytF1fUsftGpBwyHon3KN3yw"
+        }
+        defaults {
+            publications('mavenJava')
+        }
+    }
+}
+
+
+dependencies {
+
+	implementation platform("com.lendlease:com.cubs-cnt-svc-modelruntime-platform:2024-03.1.0.0-dev.+")
+
+	implementation "com.lendlease:com.cubs-jar.solverlib"
+
+	implementation ('org.springframework.boot:spring-boot-starter-aop:2.3.3.RELEASE')
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.apache.commons:commons-lang3'
+	
+	implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.25.8'
+	implementation 'com.github.javaparser:javaparser-core:3.25.8'
+	implementation 'com.github.javaparser:javaparser-core-serialization:3.25.8'
+	
+	compileOnly "org.projectlombok:lombok:1.18.20"
+	annotationProcessor "org.projectlombok:lombok:1.18.20"
+}
+
+test {
+    useJUnitPlatform()
+    afterTest { desc, result ->
+        logger.quiet "Executing ${desc.name}, result: ${result.resultType}"
+    }
+    finalizedBy jacocoTestReport
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
+
+jacocoTestReport {
+    dependsOn test
+    afterEvaluate {
+        classDirectories.from = files(classDirectories.files.collect {
+            fileTree(
+                    dir: it,
+                    exclude: [
+                            "com/lib/util/engine/tool/**"
+                    ])
+        })
+    }
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'com.lib.util.engine.tool.UnusedSolverMethod'
+    }
+    archiveClassifier.set('')
+}
+
+publishing {
+	publications {
+        shadowPub(MavenPublication) {
+            artifact shadowJar
+        }
+    }
+}
+
+task version(type: VersionTask)
+class VersionTask extends DefaultTask {
+    @TaskAction
+    def version() {
+        println project.version
+    }
+}
+
+task projectName(type: ProjectNameTask)
+class ProjectNameTask extends DefaultTask {
+    @TaskAction
+    def projectName() {
+        println project.name
+    }
+}
+
+
+test.finalizedBy jacocoTestReport
+tasks["sonarqube"].dependsOn test
+tasks.jar.dependsOn tasks.shadowJar
