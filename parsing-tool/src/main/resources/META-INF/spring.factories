@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.lib.util.engine.tool.service.UnusedMethodAnnotator
